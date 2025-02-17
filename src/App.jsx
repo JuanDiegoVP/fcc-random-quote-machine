@@ -1,39 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import "./App.css";
-import { FaQuoteLeft, FaQuoteRight, FaXTwitter } from "react-icons/fa6";
+import { Quote } from "./components/Quote";
+import { QuoteAuthor } from "./components/QuoteAuthor";
+import { colors } from "./lib/colors";
+import { FaXTwitter } from "react-icons/fa6";
 
 function App() {
   const [quotes, setQuotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newQuote, setNewQuote] = useState({});
-
-  const colors = [
-    "#4e7b61",
-    "#4e7b53",
-    "#7b7a4e",
-    "#7b674e",
-    "#7b4e4e",
-    "#4e7b78",
-    "#4e697b",
-    "#4e537b",
-    "#584e7b",
-    "#6f4e7b",
-    "#7b4e70",
-    "#7b4e52",
-    "#4e7b61",
-    "#4e7b53",
-    "#7b7a4e",
-    "#7b674e",
-    "#7b4e4e",
-    "#4e7b78",
-    "#4e697b",
-    "#4e537b",
-    "#584e7b",
-    "#6f4e7b",
-    "#7b4e70",
-    "#7b4e52",
-  ];
+  const [randomColor, setRandomColor] = useState(
+    colors[Math.floor(Math.random() * colors.length)]
+  );
 
   const fetchQuotes = async () => {
     try {
@@ -53,7 +31,7 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading quotes...</div>;
+    return <div className="">Loading quotes...</div>;
   }
   if (!quotes || quotes.length === 0) {
     return <div>No quotes found.</div>;
@@ -63,40 +41,27 @@ function App() {
     setNewQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }
 
-  const handleRandomeQuote = () => {
+  const handleRandomQuote = () => {
     const random = Math.floor(Math.random() * quotes.length);
     setNewQuote(quotes[random]);
+    setRandomColor(colors[Math.floor(Math.random() * colors.length)]);
   };
+
   console.log(quotes);
+
   return (
     <div
       id="quote-box"
-      className=" d-flex align-items-center"
+      className=" d-flex align-items-center justify-content-center vw-100 vh-100"
       style={{
-        backgroundColor: `${colors[Math.floor(Math.random() * colors.length)]}`,
-        margin: "0 auto",
-        width: "700px",
-        height: "500px",
+        backgroundColor: `${randomColor}`,
       }}
     >
-      <div
-        className="container w-100 h-100 d-flex align-items-center justify-content-center position-relative overflow-hidden"
-        style={{ maxWidth: "600px", maxHeight: "500px", margin: "0 auto" }}
-      >
-        <div className=" d-flex flex-column bg-white bg-opacity-50 h-75 p-4 justify-content-between z-1">
-          <div className=" ">
-            <FaQuoteLeft />
-            <span id="text" className=" px-1 h3 ">
-              {newQuote.quote}
-            </span>
-            <FaQuoteRight />
-          </div>
-          <div className="d-flex justify-content-end">
-            <span id="author" className="">
-              -{newQuote.author}
-            </span>
-          </div>
-          <div className="d-flex justify-content-between">
+      <div className="col-8 h-75 h-sm-75 col-lg-6 d-flex flex-column bg-white bg-opacity-50 p-lg-5 p-md-4 p-sm-3 p-1 z-1 justify-content-between">
+        <Quote newQuote={newQuote} />
+        <div className="d-flex flex-column gap-5">
+          <QuoteAuthor newQuote={newQuote} />
+          <div className="d-flex  justify-content-between">
             <a
               id="tweet-quote"
               href="twitter.com/intent/tweet"
@@ -105,10 +70,12 @@ function App() {
               <FaXTwitter />
             </a>
             <button
-              onClick={handleRandomeQuote}
+              onClick={handleRandomQuote}
               className="btn"
               id="new-quote"
-              style={{ backgroundColor: `${colors[Math.floor(Math.random() * colors.length)]}` }}
+              style={{
+                backgroundColor: `${randomColor}`,
+              }}
             >
               New quote
             </button>
